@@ -46,6 +46,8 @@
 						<th width="10%">Action</th>
 					</tr>
 					<?php
+						$quantity = 0;
+
 						$productCart = $cart->getProductCart();
 
 						if ($productCart) {
@@ -53,48 +55,66 @@
 
 							while ($result = $productCart->fetch_assoc()) {
 					?>
-							<tr>
-								<td><?php echo $result['productName']; ?></td>
-								<td>
-									<img src="./admin/uploads/<?php echo $result['image'] ?>" alt="" />
-								</td>
-								<td><?php echo $result['price'] ?></td>
-								<td>
-									<form action="" method="post">
-										<input type="hidden" name="cartId" value=<?php echo $result['cartId'] ?> />
-										<input type="number" name="quantity" value=<?php echo $result['quantity'] ?> min="1" />
-										<input type="submit" name="submit" value="Update" />
-									</form>
-								</td>
-								<td>
-									<?php
-										$totalPrice = $result['price'] * $result['quantity'];
+								<tr>
+									<td><?php echo $result['productName']; ?></td>
+									<td>
+										<img src="./admin/uploads/<?php echo $result['image'] ?>" alt="" />
+									</td>
+									<td><?php echo $result['price'] ?></td>
+									<td>
+										<form action="" method="post">
+											<input type="hidden" name="cartId" value=<?php echo $result['cartId'] ?> />
+											<input type="number" name="quantity" value=<?php echo $result['quantity'] ?> min="1" />
+											<input type="submit" name="submit" value="Update" />
+										</form>
+									</td>
+									<td>
+										<?php
+											$totalPrice = $result['price'] * $result['quantity'];
 
-										echo $totalPrice;
-									?>
-								</td>
-								<td><a href="?cartId=<?php echo $result['cartId'] ?>">X</a></td>
-							</tr>
+											echo $totalPrice;
+										?>
+									</td>
+									<td><a href="?cartId=<?php echo $result['cartId'] ?>">X</a></td>
+								</tr>
 					<?php
 								$subTotal += $totalPrice;
+								$quantity += $result['quantity'];
 							}
 						}
 					?>
 				</table>
-				<table style="float:right;text-align:left;" width="40%">
-					<tr>
-						<th>Sub Total : </th>
-						<td><?php echo $subTotal; ?></td>
-					</tr>
-					<tr>
-						<th>VAT : </th>
-						<td>10%</td>
-					</tr>
-					<tr>
-						<th>Grand Total :</th>
-						<td><?php echo $subTotal + $subTotal * 0.1; ?></td>
-					</tr>
-				</table>
+				<?php
+					$checkProductCart = $cart->getProductCart();
+
+					if ($checkProductCart) {
+				?>
+						<table style="float:right;text-align:left;" width="40%">
+							<tr>
+								<th>Sub Total : </th>
+								<td>
+									<?php
+										echo $subTotal;
+
+										Session::set("subTotal", $subTotal);
+										Session::set("quantity", $quantity);
+									?>
+								</td>
+							</tr>
+							<tr>
+								<th>VAT : </th>
+								<td>10%</td>
+							</tr>
+							<tr>
+								<th>Grand Total :</th>
+								<td><?php echo $subTotal + $subTotal * 0.1; ?></td>
+							</tr>
+						</table>
+				<?php
+					} else {
+						echo "Your cart is empty! Please shopping now!";
+					}
+				?>
 			</div>
 			<div class="shopping">
 				<div class="shopleft">

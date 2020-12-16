@@ -70,7 +70,17 @@
 					<div class="cart">
 						<a href="#" title="View my shopping cart" rel="nofollow">
 							<span class="cart_title">Cart</span>
-							<span class="no_product">(empty)</span>
+							<span class="no_product">
+								<?php
+									$checkProductCart = $cart->getProductCart();
+
+									if ($checkProductCart) {
+										echo Session::get("subTotal").' Đ '.'- Qty: '.Session::get('quantity');
+									} else {
+										echo '(empty)';
+									}
+								?>
+							</span>
 						</a>
 					</div>
 				</div>
